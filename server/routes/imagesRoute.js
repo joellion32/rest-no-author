@@ -29,6 +29,41 @@ err
 });
 });
 
+// search images
+app.get('/search/images/:finished',[VerifyToken],(req, res) => {
+let finished =  req.params.finished;
+let page = req.query.page || 0;
+page = Number(page);
+
+// search for word
+let regex = new RegExp(finished, 'i');
+
+Image.find({title: regex})
+.skip(page)
+.limit(10)
+.populate('user', 'name')
+.exec((err, ImageDB) => {
+if(err){
+return res.status(500).json({
+ok: true,
+err
+});   
+}
+
+if(!ImageDB){
+return res.status(400).json({
+ok: false,
+message: 'Image not found'
+});   
+}
+
+res.json({
+ok: true,
+images: ImageDB
+});
+});
+});
+
 
 // get image by id
 app.get('/images/:id', [VerifyToken], (req, res) => {
