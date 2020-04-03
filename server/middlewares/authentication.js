@@ -19,7 +19,22 @@ next();
 }
 
 
+let Verify_Admin_Role = (req, res, next) => {
+let user = req.user;
+
+if(user.role == "ADMIN_ROLE"){
+next();    
+}else{
+return res.status(500).json({
+ok: false,
+message: 'The user is not Administrator'
+});    
+}
+
+}
+
 
 module.exports = {
-    VerifyToken
+    VerifyToken,
+    Verify_Admin_Role
 }

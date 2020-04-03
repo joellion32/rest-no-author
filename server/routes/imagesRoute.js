@@ -6,14 +6,14 @@ const {VerifyToken} = require('../middlewares/authentication')
 const app = express();
 
 // view all images
-app.get('/images', [VerifyToken], (req, res) => {
+app.get('/images', (req, res) => {
 let page = req.query.page || 0;
 page = Number(page);
 
 Image.find({})
 .populate('user', 'name')
 .skip(page)
-.limit(10)
+.limit(20)
 .exec((err, ImageDB) => {
 if(err){
 return res.status(500).json({
@@ -30,7 +30,7 @@ err
 });
 
 // search images
-app.get('/search/images/:finished',[VerifyToken],(req, res) => {
+app.get('/search/images/:finished',(req, res) => {
 let finished =  req.params.finished;
 let page = req.query.page || 0;
 page = Number(page);
@@ -68,7 +68,9 @@ images: ImageDB
 // get image by id
 app.get('/images/:id', [VerifyToken], (req, res) => {
 let id = req.params.id;
-Image.findById(id, (err, ImageDB) => {
+Image.findById(id)
+.populate('user', 'name')
+.exec((err, ImageDB) => {
 if(err){
 return res.status(500).json({
 ok: false,
@@ -88,7 +90,7 @@ ok: true,
 image: ImageDB
 });
 });
-})
+});
 
 // saves images
 app.post('/images/save', [VerifyToken] ,(req, res) => {
@@ -96,6 +98,7 @@ body = req.body;
 let image = new Image({
 user: req.user._id,
 title: body.title,
+category_id: body.category_id,
 date: new Date().getDate()
 });
 
@@ -115,7 +118,7 @@ image: ImageDB
 });
 
 // delete images
-app.delete('/images/:id', (req, res) => {
+app.delete('/images/:id', [VerifyToken] ,(req, res) => {
 let id = req.params.id;
 Image.findById(id, (err, ImageDB) => {
 if(!ImageDB){

@@ -32,7 +32,8 @@ if(err){
 // view user by id
 app.get('/users/view/:id', (req, res) => {
 let id = req.params.id;
-User.findById(id, (err, UserDB) => {
+User.findById(id)
+.exec((err, UserDB) => {
 if(!UserDB){
 return res.status(500).json({
 ok: false,

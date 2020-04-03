@@ -17,8 +17,11 @@ type: Date,
 default: new Date().getDate()    
 },
 user: {
-type: Schema.Types.ObjectId, ref: 'User'   
-}
+type: Schema.Types.ObjectId, ref: 'User'    
+}, 
+category_id: {
+type: Schema.Types.ObjectId, ref: 'Category'    
+}, 
 });
 
 

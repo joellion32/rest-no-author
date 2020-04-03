@@ -29,8 +29,7 @@ required: false,
 status:{
 type: Boolean,
 default: false
-}
-
+},
 });
 
 // not seed password

@@ -22,6 +22,8 @@ ok: false,
 message: 'the email and password are incorrect'
 });    
 }
+
+// for the password
 if(!bcrypt.compareSync(body.password, UserDB.password)){
 return res.status(400).json({
 ok: false,
