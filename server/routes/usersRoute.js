@@ -1,9 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Image = require('../models/Images')
 const {VerifyToken} = require('../middlewares/authentication');
 const app = express();
-
 
 // view users
 app.get('/users/all', (req, res) => {
@@ -32,6 +32,10 @@ if(err){
 // view user by id
 app.get('/users/view/:id', (req, res) => {
 let id = req.params.id;
+
+// search images relacionated and ID
+Image.find({user: id})
+.exec((err, ImageDB) => {
 User.findById(id)
 .exec((err, UserDB) => {
 if(!UserDB){
@@ -42,11 +46,16 @@ message: 'user not exist'
 }else{
  res.json({
   ok: true,
-  user: UserDB   
+  user: UserDB,
+  images: ImageDB   
  })   
 }
 });
 });
+
+
+
+}); // end request
 
 
 // route register users 
